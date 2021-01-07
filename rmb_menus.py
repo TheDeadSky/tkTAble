@@ -10,7 +10,8 @@ def copy_to_clipboard(data_to_copy):
         po = os.popen(f'echo {repr(data_to_copy)}|clip')
         print("Out: ", repr(po.read()))
     elif sys.platform.startswith('linux'):
-        pass
+        po = os.popen(f'echo {repr(data_to_copy)}|xclip -selection clipboard')
+        print("Out: ", repr(po.read()))
     elif sys.platform.startswith('darwin'):
         pass
     else:
