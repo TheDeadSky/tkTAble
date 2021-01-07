@@ -8,9 +8,11 @@ import subprocess
 
 def copy_to_clipboard(data_to_copy):
     if sys.platform.startswith('win32'):
-        po = subprocess.Popen(f'echo {repr(data_to_copy)}|clip', stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        po = subprocess.Popen(f'echo {repr(data_to_copy)}|clip',
+                              stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     elif sys.platform.startswith('linux'):
-        po = subprocess.Popen(f'echo {repr(data_to_copy)}|xclip -selection clipboard', stdout=subprocess.PIPE, shell=True)
+        po = subprocess.Popen(f'echo {repr(data_to_copy)}|xclip -selection clipboard',
+                              stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     elif sys.platform.startswith('darwin'):
         pass
     else:
