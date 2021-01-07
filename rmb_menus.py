@@ -26,8 +26,8 @@ class RowMenu(tk.Menu):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master=master, *args, **kwargs)
 
-        self.add_command(label="Копировать колонку", command=lambda: self.copy_to_clipboard_action(self.current_widget.get()))
-        self.add_command(label="Копировать всю строку")
+        self.add_command(label="Копировать колонку", command=self.copy_to_cb_action)
+        self.add_command(label="Копировать всю строку", command=self.copy_row_to_cb_action)
         self.add_separator()
         self.add_command(label="Редактировать")
         self.add_command(label="Удалить")
@@ -41,8 +41,13 @@ class RowMenu(tk.Menu):
         finally:
             self.grab_release()
 
+    def copy_to_cb_action(self):
+        copy_to_clipboard(self.current_widget.get())
+        self.grab_release()
 
-    def copy_to_clipboard_action(self, text):
-        copy_to_clipboard(text)
-        print("???")
+    def copy_row_to_cb_action(self):
+        current_row_name = self.current_widget.winfo_name()[:2]
+        row = {k: v for k, v in self.current_widget.master.children.items() if k.startswith(current_row_name)}
+        txt_row = [i.get() for i in row.values()]
+        copy_to_clipboard(", ".join(txt_row))
         self.grab_release()
