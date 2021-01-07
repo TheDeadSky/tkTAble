@@ -2,16 +2,19 @@
 # В этом файле хранятся меню правой кнопки мыши #
 ##################################################
 import tkinter as tk
-import os, sys
+import sys
+import subprocess
 
 
 def copy_to_clipboard(data_to_copy):
     if sys.platform.startswith('win32'):
-        po = os.popen(f'echo {repr(data_to_copy)}|clip')
-        print("Out: ", repr(po.read()))
+        po = subprocess.Popen(f'echo {repr(data_to_copy)}|clip', stdout=subprocess.PIPE, shell=True)
+        prep, _ = po.communicate()
+        print("Out: ", repr(prep))
     elif sys.platform.startswith('linux'):
-        po = os.popen(f'echo {repr(data_to_copy)}|xclip -selection clipboard')
-        print("Out: ", repr(po.read()))
+        po = subprocess.Popen(f'echo {repr(data_to_copy)}|xclip -selection clipboard', stdout=subprocess.PIPE, shell=True)
+        prep, _ = po.communicate()
+        print("Out: ", repr(prep))
     elif sys.platform.startswith('darwin'):
         pass
     else:
