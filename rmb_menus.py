@@ -8,13 +8,9 @@ import subprocess
 
 def copy_to_clipboard(data_to_copy):
     if sys.platform.startswith('win32'):
-        po = subprocess.Popen(f'echo {repr(data_to_copy)}|clip', stdout=subprocess.PIPE, shell=True)
-        prep, _ = po.communicate()
-        print("Out: ", repr(prep))
+        po = subprocess.Popen(f'echo {repr(data_to_copy)}|clip', stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     elif sys.platform.startswith('linux'):
         po = subprocess.Popen(f'echo {repr(data_to_copy)}|xclip -selection clipboard', stdout=subprocess.PIPE, shell=True)
-        prep, _ = po.communicate()
-        print("Out: ", repr(prep))
     elif sys.platform.startswith('darwin'):
         pass
     else:
@@ -27,7 +23,7 @@ class RowMenu(tk.Menu):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master=master, *args, **kwargs)
 
-        self.add_command(label="Копировать колонку", command=lambda: copy_to_clipboard(self.current_widget.get()))
+        self.add_command(label="Копировать колонку", command=lambda: self.copy_to_clipboard_action(self.current_widget.get()))
         self.add_command(label="Копировать всю строку")
         self.add_separator()
         self.add_command(label="Редактировать")
@@ -41,3 +37,9 @@ class RowMenu(tk.Menu):
             self.tk_popup(event.x_root, event.y_root)
         finally:
             self.grab_release()
+
+
+    def copy_to_clipboard_action(self, text):
+        copy_to_clipboard(text)
+        print("???")
+        self.grab_release()
